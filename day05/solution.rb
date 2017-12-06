@@ -14,39 +14,40 @@ class Jumper
   end
 
   def execute
-    while !jumped_out?
-      jump
-    end
+    jump until jumped_out?
   end
 
+  private
+
   def jump
-    puts "#{@jump_count} index: #{@jump_idx}"
+    get_current_jump_value
 
-    jump_value = get_current_jump_value
+    if @complex_jumps
+      increment_current_jump_value_part2
+    else
+      increment_current_jump_value
+    end
 
-    increment_current_jump_value
     increment_jump_count
 
-    @jump_idx += jump_value
+    @jump_idx += @jump_value
   end
 
   def jumped_out?
     @jump_idx >= @instruction_count
   end
 
-  private
-
   def get_current_jump_value
-    @instructions[@jump_idx]
+    @jump_value = @instructions[@jump_idx]
   end
 
   def increment_current_jump_value
-    if @complex_jumps
-      if @instructions[@jump_idx] >= 3
-        @instructions[@jump_idx] -= 1
-      else
-        @instructions[@jump_idx] += 1
-      end  
+    @instructions[@jump_idx] += 1
+  end
+
+  def increment_current_jump_value_part2
+    if @jump_value >= 3
+      @instructions[@jump_idx] -= 1
     else
       @instructions[@jump_idx] += 1
     end
@@ -70,8 +71,9 @@ end
 j = Jumper.new
 j.execute
 
+puts "#{j.jump_count} jumps (part1)"
+
 j2 = Jumper.new(complex_jumps: true)
 j2.execute
 
-puts "#{j.jump_count} jumps (part1)"
 puts "#{j2.jump_count} jumps (part2)"
