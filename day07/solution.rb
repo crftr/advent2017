@@ -1,6 +1,3 @@
-require 'rb-readline'
-require 'pry'
-
 class CircusData
 
   attr_reader :nodes
@@ -16,23 +13,64 @@ class CircusData
     @nodes.reject { |_, v| v.include? :parent }
   end
 
-  def weight(node_name = :all)
-    return weight(bottom_node.keys[0]) if node_name == :all
+  def loaded_weight(node_name = :all)
+    return loaded_weight(bottom_node.keys[0]) if node_name == :all
 
     children_names = @nodes[node_name][:children]
 
     if children_names.empty?
       @nodes[node_name][:weight]
     else
-      children_weight = children_names.map { |cn| weight(cn) }.reduce(&:+)
+      children_weight = children_names.map { |cn| loaded_weight(cn) }.reduce(&:+)
       @nodes[node_name][:weight] + children_weight
     end
   end
 
-  def unbalanced_child(node_name = :all)
-    return unbalanced_child(bottom_node.keys[0]) if node_name == :all
-    
-    # continue here
+  def all_children_balanced?(node_name = :all)
+    return all_children_balanced?(bottom_node.keys[0]) if node_name == :all
+
+    cw = children_weights(node_name)
+    if cw.count > 1
+      unbalanced = cw.select { |_, v| v.count == 1 }
+      [false, unbalanced.values.flatten[0]]
+    else
+      [true]
+    end
+  end
+
+  def children_weights(node_name)
+    current = @nodes[node_name]
+
+    current[:children].reduce({}) do |set, cn|
+      child_weight = loaded_weight(cn).to_s
+      if set.key?(child_weight)
+        set[child_weight] << cn
+      else
+        set[child_weight] = [cn]
+      end
+      set
+    end
+  end
+
+  def find_unbalanced_node(node_name = :all)
+    return find_unbalanced_node(bottom_node.keys[0]) if node_name == :all
+
+    current = @nodes[node_name]
+
+    balance_result = all_children_balanced?(node_name)
+    if balance_result[0] == true
+      puts "#{node_name} is balanced"
+    else
+      puts  "#{node_name} is unbalanced..."
+      puts  "Loaded weights: #{children_weights(node_name)}"
+      print "Node weights:    "
+      current[:children].each { |cn| print "#{cn}:#{@nodes[cn][:weight]} " }
+      print "\n"
+
+      current[:children].each do |cn|
+        find_unbalanced_node(cn)
+      end
+    end
   end
 
   private
@@ -68,10 +106,8 @@ class CircusData
   end
 end
 
-cd_test = CircusData.new('test_input.txt')
-p cd_test.bottom_node.keys[0] # tknk
-p cd_test.weight
+# cd_test = CircusData.new('test_input.txt')
+# cd_test.find_unbalanced_node
 
 cd = CircusData.new('input.txt')
-p cd.bottom_node.keys[0]
-p cd.weight
+cd.find_unbalanced_node
