@@ -47,4 +47,17 @@ describe Stream do
     it { expect(subject.calculate_score(eg[0])).to eql(eg[1]) }
   end
 
+  garbage_count_examples = [
+    ['<>',                   0],
+    ['<random characters>', 17],
+    ['<<<<>',                3],
+    ['<{!>}>',               2],
+    ['<!!>',                 0],
+    ['<!!!>>',               0],
+    ['<{o"i!a,<{i<a>',      10]
+  ]
+
+  garbage_count_examples.each do |eg|
+    it { expect(subject.count_garbage(eg[0])).to eql(eg[1]) }
+  end
 end

@@ -1,8 +1,15 @@
-require 'pry'
-
 class Stream
 
   attr_reader :str, :nodes
+
+  def count_garbage(str)
+    str = process_cancellations(str)
+
+    str.scan(/<(.*?)>/)
+       .flatten
+       .map(&:length)
+       .reduce(:+)
+  end
 
   def count_groups(str)
     build_nodes_from_str(str)
@@ -94,10 +101,9 @@ class Node
   end
 end
 
-
 File.open('input.txt', 'r') do |f|
   f.each_line do |line|
     puts "Score: #{Stream.new.calculate_score(line)}"
+    puts "Garbage: #{Stream.new.count_garbage(line)}"
   end
 end
-
