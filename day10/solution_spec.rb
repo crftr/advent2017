@@ -6,7 +6,7 @@ describe KnotHash do
   describe 'Part 1, example implementation' do
 
     before(:each) do
-      @kh = KnotHash.new(list_max: 5, lengths: [3, 4, 1, 5])
+      @kh = KnotHash.new(5, [3, 4, 1, 5])
     end
 
     it 'will have the assumed default values' do

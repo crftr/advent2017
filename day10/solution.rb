@@ -2,7 +2,7 @@ class KnotHash
 
   attr_accessor :list, :current_pos, :skip_size, :lengths
 
-  def initialize(list_max: 255, lengths: [])
+  def initialize(list_max, lengths = [])
     @list        = (0...list_max).to_a
     @current_pos = 0
     @skip_size   = 0
@@ -51,10 +51,10 @@ class KnotHash
 end
 
 
-test = KnotHash.new(list_max: 5, lengths: [3, 4, 1, 5])
+test = KnotHash.new(5, [3, 4, 1, 5])
 test.iterate_until_all_lengths_exausted
 puts test.list[0] * test.list[1]
 
-kh = KnotHash.new(list_max: 256, lengths: [147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70])
+kh = KnotHash.new(256, [147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70])
 kh.iterate_until_all_lengths_exausted
 puts kh.list[0] * kh.list[1]
