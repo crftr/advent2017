@@ -59,7 +59,7 @@ end
 describe KnotInputConverter do
 
   examples = [
-    [[1,2,3], '49,44,50,44,51,17,31,73,47,23'],
+    [[1, 2, 3], [49, 44, 50, 44, 51, 17, 31, 73, 47, 23]],
   ]
 
   examples.each do |eg|

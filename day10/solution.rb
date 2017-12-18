@@ -2,12 +2,17 @@ class KnotHash
 
   attr_accessor :list, :current_pos, :skip_size, :lengths
 
-  def initialize(list_max, lengths = [])
+  def initialize(list_max, lengths = [], is_part2 = false)
     @list        = (0...list_max).to_a
     @current_pos = 0
     @skip_size   = 0
+    @is_part2    = is_part2
 
-    @lengths = lengths
+    if @is_part2
+      @lengths = KnotInputConverter.call(lengths)
+    else
+      @lengths = lengths
+    end
   end
 
   def iterate
@@ -19,8 +24,13 @@ class KnotHash
     lengths.shift
   end
 
-  def iterate_until_all_lengths_exausted
-    iterate until lengths.count.eql?(0)
+  def iterate_rounds(round_count = 1)
+    lengths_copy = lengths
+
+    round_count.times do
+      lengths = lengths_copy
+      iterate until lengths.count.eql?(0)
+    end
   end
 
   def reverse_selection
@@ -59,15 +69,15 @@ class KnotInputConverter
           .map(&:ord)
           .join(',')
 
-    "#{args},17,31,73,47,23"
+    "#{args},17,31,73,47,23".split(',').map(&:to_i)
   end
 end
 
 
 test = KnotHash.new(5, [3, 4, 1, 5])
-test.iterate_until_all_lengths_exausted
+test.iterate_rounds(1)
 puts test.list[0] * test.list[1]
 
 kh = KnotHash.new(256, [147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70])
-kh.iterate_until_all_lengths_exausted
+kh.iterate_rounds(1)
 puts kh.list[0] * kh.list[1]
