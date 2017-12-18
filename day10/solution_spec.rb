@@ -53,7 +53,16 @@ describe KnotHash do
       expect(@kh.list).to        eql([3, 4, 2, 1, 0])
       expect(@kh.lengths).to     eql([])
     end
+  end
+end
 
+describe KnotInputConverter do
 
+  examples = [
+    [[1,2,3], '49,44,50,44,51,17,31,73,47,23'],
+  ]
+
+  examples.each do |eg|
+    it { expect(KnotInputConverter.call(eg[0])).to eql(eg[1]) }
   end
 end

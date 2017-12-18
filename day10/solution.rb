@@ -50,6 +50,19 @@ class KnotHash
   end
 end
 
+class KnotInputConverter
+  def self.call args
+    args =
+      args.to_s
+          .gsub(/\s/,'')[1..-2]
+          .chars
+          .map(&:ord)
+          .join(',')
+
+    "#{args},17,31,73,47,23"
+  end
+end
+
 
 test = KnotHash.new(5, [3, 4, 1, 5])
 test.iterate_until_all_lengths_exausted
