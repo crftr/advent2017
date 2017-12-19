@@ -46,6 +46,22 @@ class KnotHash
     end
   end
 
+  def dense_hash(chunk_size = 16)
+    chunks  = (list.size / chunk_size.to_f).ceil
+    dense_h = []
+
+    # require 'pry'; binding.pry
+
+    chunks.times do |i|
+      dense_h <<
+        list[(i * chunk_size)...((i + 1) * chunk_size)].reduce(:^)
+    end
+
+    dense_h
+  end
+
+  private
+
   def range_selection_to_reverse
     (current_pos...(current_pos + lengths[0]))
   end

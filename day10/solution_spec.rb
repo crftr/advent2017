@@ -54,6 +54,15 @@ describe KnotHash do
       expect(@kh.lengths).to     eql([])
     end
   end
+
+  describe 'Part 2, example implementation' do
+    it 'will create a dense_hash' do
+      k = KnotHash.new(16)
+      k.list = [65, 27, 9, 1, 4, 3, 40, 50, 91, 7, 6, 0, 2, 5, 68, 22]
+
+      expect(k.dense_hash(16)).to eql([64])
+    end
+  end
 end
 
 describe KnotInputConverter do
