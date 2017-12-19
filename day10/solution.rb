@@ -2,13 +2,12 @@ class KnotHash
 
   attr_accessor :list, :current_pos, :skip_size, :lengths
 
-  def initialize(list_max, lengths = [], is_part2 = false)
+  def initialize(list_max, lengths = [])
     @list        = (0...list_max).to_a
     @current_pos = 0
     @skip_size   = 0
-    @is_part2    = is_part2
 
-    if @is_part2
+    if lengths.is_a?(String)
       @lengths = KnotInputConverter.call(lengths)
     else
       @lengths = lengths
@@ -25,11 +24,11 @@ class KnotHash
   end
 
   def iterate_rounds(round_count = 1)
-    lengths_copy = lengths
+    lengths_backup = lengths.dup
 
-    round_count.times do
-      lengths = lengths_copy
-      iterate until lengths.count.eql?(0)
+    round_count.times do |i|
+      @lengths = lengths_backup.dup
+      iterate while @lengths.count > 0
     end
   end
 
@@ -79,15 +78,11 @@ class KnotHash
 end
 
 class KnotInputConverter
-  def self.call args
-    args =
-      args.to_s
-          .gsub(/\s/,'')[1..-2]
-          .chars
-          .map(&:ord)
-          .join(',')
+  STATIC_SUFFIX = [17, 31, 73, 47, 23]
 
-    "#{args},17,31,73,47,23".split(',').map(&:to_i)
+  def self.call args
+    arg_array = args.bytes.to_a
+    arg_array + STATIC_SUFFIX
   end
 end
 
@@ -99,3 +94,7 @@ puts test.list[0] * test.list[1]
 kh = KnotHash.new(256, [147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70])
 kh.iterate_rounds(1)
 puts kh.list[0] * kh.list[1]
+
+kh = KnotHash.new(256, '147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70')
+kh.iterate_rounds(64)
+puts kh.hexadecimal(kh.dense_hash)

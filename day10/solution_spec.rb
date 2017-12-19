@@ -78,7 +78,7 @@ describe KnotHash do
 
     examples.each do |eg|
       it 'hashes with all functionality' do
-        @part2_k = KnotHash.new(256, eg[0], true)
+        @part2_k = KnotHash.new(256, eg[0])
         @part2_k.iterate_rounds(64)
 
         dense_hash = @part2_k.dense_hash
@@ -92,7 +92,8 @@ end
 describe KnotInputConverter do
 
   examples = [
-    [[1, 2, 3], [49, 44, 50, 44, 51, 17, 31, 73, 47, 23]],
+    ['1,2,3', [49, 44, 50, 44, 51, 17, 31, 73, 47, 23]],
+    ['',      [17, 31, 73, 47, 23]],
   ]
 
   examples.each do |eg|
