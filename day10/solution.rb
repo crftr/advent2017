@@ -50,14 +50,16 @@ class KnotHash
     chunks  = (list.size / chunk_size.to_f).ceil
     dense_h = []
 
-    # require 'pry'; binding.pry
-
     chunks.times do |i|
       dense_h <<
         list[(i * chunk_size)...((i + 1) * chunk_size)].reduce(:^)
     end
 
     dense_h
+  end
+
+  def hexadecimal(elements)
+    elements.map { |e| "%02x" % e }.join('')
   end
 
   private

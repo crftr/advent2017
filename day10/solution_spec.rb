@@ -62,6 +62,30 @@ describe KnotHash do
 
       expect(k.dense_hash(16)).to eql([64])
     end
+
+    it 'will generate a hexadecimal from an array of elements' do
+      k = KnotHash.new(16)
+
+      expect(k.hexadecimal([64, 7, 255])).to eql('4007ff')
+    end
+
+    examples = [
+      ['',         'a2582a3a0e66e6e86e3812dcb672a272'],
+      ['AoC 2017', '33efeb34ea91902bb2f59c9920caa6cd'],
+      ['1,2,3',    '3efbe78a8d82f29979031a4aa0b16a9d'],
+      ['1,2,4',    '63960835bcdc130f0b66d7ff4f6a5a8e']
+    ]
+
+    examples.each do |eg|
+      it 'hashes with all functionality' do
+        @part2_k = KnotHash.new(256, eg[0], true)
+        @part2_k.iterate_rounds(64)
+
+        dense_hash = @part2_k.dense_hash
+
+        expect(@part2_k.hexadecimal(dense_hash)).to eql(eg[1])
+      end
+    end
   end
 end
 
