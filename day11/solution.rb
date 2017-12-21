@@ -1,17 +1,25 @@
 class HexEd
+
+  attr_reader :max_distance
+
   def initialize(moves)
     @pos = HexPosition.new
-    @moves = moves
+    @max_distance = 0
 
-    process_moves
+    process_moves(moves)
   end
 
-  def process_moves
-    @moves.each { |m| @pos.move(m) }
+  def process_moves(moves)
+    moves.each do |m|
+      @pos.move(m)
+      distance
+    end
   end
 
   def distance
-    @pos.distance_to(0,0,0)
+    d = @pos.distance_to(0,0,0)
+    @max_distance = d if @max_distance < d
+    d
   end
 end
 
@@ -64,6 +72,7 @@ File.open('input.txt', 'r') do |f|
 
     puts "Part 1"
     puts "Steps: #{h1.distance}"
+    puts "Max Distance: #{h1.max_distance}"
   end
 end
 
